@@ -10,11 +10,14 @@ import os
 
 # Helper Functions
 def get_corrupted_input(input, corruption_level):
+    # print(input)
     corrupted = np.copy(input)
-    inv = np.random.binomial(n=1, p=corruption_level, size=len(input))
-    for i, v in enumerate(input):
-        if inv[i]:
-            corrupted[i] = -1 * v
+    # inv = np.random.binomial(n=1, p=corruption_level, size=len(input))
+    # for i, v in enumerate(input):
+    #     if inv[i]:
+    #         corrupted[i] = -1 * v
+
+    corrupted = corrupted[::-1]
     return corrupted
 
 def reshape(data):
@@ -24,7 +27,7 @@ def reshape(data):
 def split(l, n):
     for i in range(0,len(l), n):
         yield l[i:i+n]
-    
+
 def plot(data, test, predicted, figsize=(5, 6)):
     data = [reshape(d) for d in data]
     test = [reshape(d) for d in test]
@@ -34,7 +37,7 @@ def plot(data, test, predicted, figsize=(5, 6)):
     count=0
     file_count=0
     for d in split(data, 4):
-        if not len(d)is 1: 
+        if not len(d)is 1:
             fig, axarr = plt.subplots(len(d), 3)
             for i in range(len(d)):
                 if i==0:
@@ -90,14 +93,14 @@ def main():
 
     import cv2
     import glob
-    img_dir = "train/" # Enter Directory of all images 
+    img_dir = "train/" # Enter Directory of all images
     data_path = os.path.join(img_dir,'*g')
     files = glob.glob(data_path)
     data = []
     for f1 in files:
         img = rgb2gray(cv2.imread(f1))
         data.append(img)
-        
+
     # Preprocessing
     print("Start to data preprocessing...")
     data = [preprocessing(d) for d in data]
@@ -107,7 +110,7 @@ def main():
     model.train_weights(data)
 
     # Generate testset
-    test = [get_corrupted_input(d, 0.3) for d in data]
+    test = [get_corrupted_input(d, 0.05) for d in data]
 
     predicted = model.predict(test, threshold=0, asyn=False)
     print("Show prediction results...")

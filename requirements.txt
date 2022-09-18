@@ -1,0 +1,4 @@
+matplotlib==3.5.3
+numpy==1.23.3
+skimage==0.0
+tqdm==4.64.1
